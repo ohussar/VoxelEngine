@@ -1,0 +1,28 @@
+plugins {
+    id 'application'
+}
+
+group = 'com.ohussar.VoxelEngine'
+version = '1.0-SNAPSHOT'
+apply plugin: 'application'
+apply plugin: 'idea'
+mainClassName = 'com.ohussar.VoxelEngine.Main'
+repositories {
+    mavenCentral()
+    flatDir {
+        dirs 'libs'
+    }
+}
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation files('GLUtils.jar')
+}
+
+test {
+    useJUnitPlatform()
+}
+
+application {
+    applicationDefaultJvmArgs += "-Djava.library.path=${projectDir}/libs/lwjgl-2.9.1/native/windows/"
+
+}
