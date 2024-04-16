@@ -1,6 +1,7 @@
 package com.ohussar.VoxelEngine;
 import com.ohussar.VoxelEngine.Models.ModelRenderer;
 import com.ohussar.VoxelEngine.Models.RawModel;
+import com.ohussar.VoxelEngine.Models.TexturedModel;
 import org.lwjgl.opengl.*;
 
 public class Renderer {
@@ -9,7 +10,7 @@ public class Renderer {
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
     }
 
-    public void render(RawModel model) {
+    public void render(TexturedModel model) {
         ModelRenderer.render(model);
     }
 

@@ -1,7 +1,9 @@
 package com.ohussar.VoxelEngine;
 
 import com.ohussar.VoxelEngine.Models.RawModel;
+import com.ohussar.VoxelEngine.Models.TexturedModel;
 import com.ohussar.VoxelEngine.Shaders.StaticShader;
+import com.ohussar.VoxelEngine.Textures.ModelTexture;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.*;
@@ -32,13 +34,20 @@ public class Main {
             0, 1, 2,
             2, 3, 0
         };
-
-        RawModel model = loader.loadToVAO(vertices, indices);
+        float[] uv = {
+                0, 0,
+                0, 1,
+                1, 1,
+                1, 0,
+        };
+        RawModel model = loader.loadToVAO(vertices, indices, uv);
+        ModelTexture texture = new ModelTexture(loader.loadTexture("dirtTex"));
+        TexturedModel m = new TexturedModel(model, texture);
 
         while(!Display.isCloseRequested()){
             renderer.prepare();
             shader.start();
-            renderer.render(model);
+            renderer.render(m);
             shader.stop();
             updateDisplay();
         }
