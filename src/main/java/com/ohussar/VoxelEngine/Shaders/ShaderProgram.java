@@ -24,6 +24,9 @@ public abstract class ShaderProgram {
         GL20.glAttachShader(programID, fragmentShaderID);
         GL20.glLinkProgram(programID);
         GL20.glValidateProgram(programID);
+
+        getAllUniformLocations();
+
     }
 
     protected abstract void getAllUniformLocations();
