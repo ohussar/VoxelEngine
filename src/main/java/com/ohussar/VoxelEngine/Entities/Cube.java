@@ -6,12 +6,14 @@ import org.lwjgl.util.vector.Vector3f;
 public final class Cube {
 
     public static Vector3f[] PX_POS = {
+
             new Vector3f(0.5f,0.5f,-0.5f),
             new Vector3f(0.5f,-0.5f,-0.5f),
             new Vector3f(0.5f,-0.5f,0.5f),
             new Vector3f(0.5f,-0.5f,0.5f),
             new Vector3f(0.5f,0.5f,0.5f),
             new Vector3f(0.5f,0.5f,-0.5f)
+
     };
 
     public static Vector3f[] NX_POS = {

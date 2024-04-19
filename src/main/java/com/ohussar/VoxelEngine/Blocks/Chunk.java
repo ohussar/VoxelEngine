@@ -1,5 +1,6 @@
 package com.ohussar.VoxelEngine.Blocks;
 
+import com.ohussar.VoxelEngine.Entities.Cube;
 import com.ohussar.VoxelEngine.Main;
 import com.ohussar.VoxelEngine.MemoryLoader;
 import org.lwjgl.Sys;
@@ -8,6 +9,7 @@ import org.lwjgl.util.vector.Vector3f;
 import org.ninjacave.jarsplice.gui.ShellScriptPanel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.ohussar.VoxelEngine.Entities.Cube.*;
@@ -15,7 +17,7 @@ import static com.ohussar.VoxelEngine.Entities.Cube.*;
 public class Chunk {
     public int VAO = -1;
     private List<Block> blocks = new ArrayList<>();
-    private List<Vector3f> vertices = new ArrayList<>();
+    private List<Vertex> vertices = new ArrayList<>();
     private List<Vector2f> uvs = new ArrayList<>();
     private List<Vector3f> normals = new ArrayList<>();
 
@@ -23,7 +25,7 @@ public class Chunk {
         this.blocks = new ArrayList<>(blocks);
     }
 
-    public List<Vector3f> getVertices(){
+    public List<Vertex> getVertices(){
         return vertices;
     }
 
@@ -59,29 +61,40 @@ public class Chunk {
                 if(!isOccluded[k]){
                     for(int f = 0; f < 6; f++){
                         Vector3f start = vertexes[k][f];
-                        vertices.add(new Vector3f(start.x + initial.pos.x, start.y + initial.pos.y, start.z + initial.pos.z));
-                        uvs.add(UV[f]);
+                        Vector3f pos = new Vector3f(start.x + initial.pos.x, start.y + initial.pos.y, start.z + initial.pos.z);
+                        vertices.add(new Vertex(pos, UV[f]));
                     }
                 }
             }
 
         }
-        float[] vert = new float[vertices.size() * 3];
-        float[] uv = new float[uvs.size() * 2];
+
+        List<Float> positionslist = new ArrayList<>();
+        List<Float> uvlist = new ArrayList<>();
 
         for(int i = 0; i < vertices.size(); i++){
-            vert[i] = vertices.get(i).x;
-            vert[i+1] = vertices.get(i).y;
-            vert[i+2] = vertices.get(i).z;
+            positionslist.add(vertices.get(i).pos.x);
+            positionslist.add(vertices.get(i).pos.y);
+            positionslist.add(vertices.get(i).pos.z);
+            uvlist.add(vertices.get(i).uv.x);
+            uvlist.add(vertices.get(i).uv.y);
         }
-        for(int k = 0; k < uvs.size(); k++){
-            uv[k] = uvs.get(k).x;
-            uv[k+1] = uvs.get(k).y;
+
+
+        float[] vert = new float[positionslist.size()];
+        float[] uv = new float[uvlist.size()];
+
+        for(int i = 0; i < positionslist.size(); i++){
+            vert[i] = positionslist.get(i);
+        }
+        for(int k = 0; k < uvlist.size(); k++){
+            uv[k] = uvlist.get(k);
         }
 
 
         VAO = Main.StaticLoader.updateVAO(VAO, vert, uv);
-        System.out.println(uv.length);
+        positionslist.clear();;
+        uvlist.clear();
     }
 
 }

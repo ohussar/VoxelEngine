@@ -47,13 +47,12 @@ public class Renderer {
         GL20.glEnableVertexAttribArray(1); //uv
 
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, model.getTexture().getTextureID());
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, BlockTypes.blockTextures[BlockTypes.DIRT].getTextureID());
 
-        Matrix4f transformMatrix = Maths.createTransformationMatrix(new Vector3f(5, 0, 5), new Vector3f(0, 0, 0), 1);
+        Matrix4f transformMatrix = Maths.createTransformationMatrix(new Vector3f(5, 0, -5), new Vector3f(0, 0, 0), 1);
         shader.loadTransformationMatrix(transformMatrix);
-        // <- use this without indices ( for chunk mesh )
 
-        GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, chunk.getVertices().size() * 3);
+        GL11.glDrawArrays(GL11.GL_TRIANGLES, 0,chunk.getVertices().size() * 3);
         GL20.glDisableVertexAttribArray(0);
         GL20.glDisableVertexAttribArray(1);
         GL30.glBindVertexArray(0);

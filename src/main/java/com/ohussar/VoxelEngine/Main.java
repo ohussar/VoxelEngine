@@ -45,9 +45,9 @@ public class Main {
         entities.add(entity);
         Chunk chunk = new Chunk();
         List<Block> blocks = new ArrayList<>();
-        for(int x = 0; x < 10; x++){
-            for(int y = 0; y < 10; y++){
-                for(int z = 0; z < 10; z++){
+        for(int x = 0; x < 8; x++){
+            for(int y = 0; y < 8; y++){
+                for(int z = 0; z < 8; z++){
                     blocks.add(new Block(BlockTypes.DIRT, new Vector3f(x, y, z)));
                 }
             }
@@ -61,14 +61,7 @@ public class Main {
             camera.move();
             shader.start();
             shader.loadViewMatrix(camera);
-
             renderer.renderChunk(chunk, shader, texModel);
-
-//            for(Entity ent : entities){
-//                renderer.render(ent, shader);
-//            }
-
-
             shader.stop();
             updateDisplay();
         }
@@ -100,7 +93,6 @@ public class Main {
                     closeDisplay();
                 }
                 Mouse.setGrabbed(!Keyboard.isKeyDown(Keyboard.KEY_E));
-
             }
         }
 
