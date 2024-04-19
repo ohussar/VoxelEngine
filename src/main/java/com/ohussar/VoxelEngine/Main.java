@@ -1,5 +1,7 @@
 package com.ohussar.VoxelEngine;
 
+import com.ohussar.VoxelEngine.Blocks.BlockTypes;
+import com.ohussar.VoxelEngine.Blocks.Chunk;
 import com.ohussar.VoxelEngine.Entities.Camera;
 import com.ohussar.VoxelEngine.Entities.Cube;
 import com.ohussar.VoxelEngine.Entities.Entity;
@@ -12,7 +14,7 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.*;
 import org.lwjgl.util.vector.Vector3f;
-
+import com.ohussar.VoxelEngine.Blocks.Block;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,19 +39,35 @@ public class Main {
         Renderer renderer = new Renderer(shader);
 
         RawModel model = loader.loadToVAO(Cube.vertices, Cube.indices, Cube.uv);
-        ModelTexture texture = new ModelTexture(loader.loadTexture("dirtTex"));
+        ModelTexture texture = new ModelTexture(MemoryLoader.loadTexture("dirtTex"));
         TexturedModel texModel = new TexturedModel(model, texture);
-
-
+        Entity entity = new Entity(texModel, new Vector3f(0, 2, 0), new Vector3f(0, 0,0), 1);
+        entities.add(entity);
+        Chunk chunk = new Chunk();
+        List<Block> blocks = new ArrayList<>();
+        for(int x = 0; x < 10; x++){
+            for(int y = 0; y < 10; y++){
+                for(int z = 0; z < 10; z++){
+                    blocks.add(new Block(BlockTypes.DIRT, new Vector3f(x, y, z)));
+                }
+            }
+        }
+        chunk.setBlockList(blocks);
+        chunk.buildMesh();
         Camera camera = new Camera(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0));
+        System.out.println(chunk.getVertices().size() * 3);
         while(!Display.isCloseRequested()){
             renderer.prepare();
             camera.move();
             shader.start();
             shader.loadViewMatrix(camera);
-            for(Entity ent : entities){
-                renderer.render(ent, shader);
-            }
+
+            renderer.renderChunk(chunk, shader, texModel);
+
+//            for(Entity ent : entities){
+//                renderer.render(ent, shader);
+//            }
+
 
             shader.stop();
             updateDisplay();

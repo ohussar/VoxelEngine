@@ -9,7 +9,7 @@ public class BlockTypes {
 
     public static final int DIRT = 0;
 
-    private static final ModelTexture[] blockTextures = {
+    public static final ModelTexture[] blockTextures = {
             new ModelTexture(MemoryLoader.loadTexture("dirtTex")) // dirt;
     };
 

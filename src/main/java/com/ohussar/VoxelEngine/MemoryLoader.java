@@ -30,6 +30,20 @@ public class MemoryLoader {
         return new RawModel(vaoID, indices.length);
     }
 
+    public int updateVAO(int VAO, float[] vertices, float[] uv){
+        if(VAO == -1){
+            VAO = createVAO();
+        }else{
+            GL30.glBindVertexArray(VAO);
+        }
+
+        storeDataInAttributeList(vertices, 0, 3);
+        storeDataInAttributeList(uv, 1, 2);
+        GL30.glBindVertexArray(0);
+        return VAO;
+    }
+
+
     public static int loadTexture(String filename){
         Texture texture;
         try {
