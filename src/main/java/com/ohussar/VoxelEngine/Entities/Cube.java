@@ -1,6 +1,97 @@
 package com.ohussar.VoxelEngine.Entities;
 
+import com.nishu.utils.Vector2f;
+import org.lwjgl.util.vector.Vector3f;
+
 public final class Cube {
+
+    public static Vector3f[] PX_POS = {
+
+            new Vector3f(0.5f,0.5f,-0.5f),
+            new Vector3f(0.5f,-0.5f,-0.5f),
+            new Vector3f(0.5f,-0.5f,0.5f),
+            new Vector3f(0.5f,-0.5f,0.5f),
+            new Vector3f(0.5f,0.5f,0.5f),
+            new Vector3f(0.5f,0.5f,-0.5f)
+
+    };
+
+    public static Vector3f[] NX_POS = {
+
+            new Vector3f(-0.5f,0.5f,-0.5f),
+            new Vector3f(-0.5f,-0.5f,-0.5f),
+            new Vector3f(-0.5f,-0.5f,0.5f),
+            new Vector3f(-0.5f,-0.5f,0.5f),
+            new Vector3f(-0.5f,0.5f,0.5f),
+            new Vector3f(-0.5f,0.5f,-0.5f)
+
+    };
+
+    public static Vector3f[] PY_POS = {
+
+            new Vector3f(-0.5f,0.5f,0.5f),
+            new Vector3f(-0.5f,0.5f,-0.5f),
+            new Vector3f(0.5f,0.5f,-0.5f),
+            new Vector3f(0.5f,0.5f,-0.5f),
+            new Vector3f(0.5f,0.5f,0.5f),
+            new Vector3f(-0.5f,0.5f,0.5f)
+
+    };
+
+    public static Vector3f[] NY_POS = {
+
+            new Vector3f(-0.5f,-0.5f,0.5f),
+            new Vector3f(-0.5f,-0.5f,-0.5f),
+            new Vector3f(0.5f,-0.5f,-0.5f),
+            new Vector3f(0.5f,-0.5f,-0.5f),
+            new Vector3f(0.5f,-0.5f,0.5f),
+            new Vector3f(-0.5f,-0.5f,0.5f)
+
+    };
+
+    public static Vector3f[] PZ_POS = {
+
+            new Vector3f(-0.5f,0.5f,0.5f),
+            new Vector3f(-0.5f,-0.5f,0.5f),
+            new Vector3f(0.5f,-0.5f,0.5f),
+            new Vector3f(0.5f,-0.5f,0.5f),
+            new Vector3f(0.5f,0.5f,0.5f),
+            new Vector3f(-0.5f,0.5f,0.5f)
+
+    };
+
+    public static Vector3f[] NZ_POS = {
+
+            new Vector3f(-0.5f,0.5f,-0.5f),
+            new Vector3f(-0.5f,-0.5f,-0.5f),
+            new Vector3f(0.5f,-0.5f,-0.5f),
+            new Vector3f(0.5f,-0.5f,-0.5f),
+            new Vector3f(0.5f,0.5f,-0.5f),
+            new Vector3f(-0.5f,0.5f,-0.5f)
+
+    };
+
+    public static Vector2f[] UV = {
+
+            new Vector2f(0.f, 0.f),
+            new Vector2f(0.f, 1.f),
+            new Vector2f(1.f, 1.f),
+            new Vector2f(1.f, 1.f),
+            new Vector2f(1.f, 0.f),
+            new Vector2f(0.f, 0.f)
+
+    };
+
+    public static Vector3f[] NORMALS = {
+
+            new Vector3f(0.f, 0.f, 0.f),
+            new Vector3f(0.f, 0.f, 0.f),
+            new Vector3f(0.f, 0.f, 0.f),
+            new Vector3f(0.f, 0.f, 0.f),
+            new Vector3f(0.f, 0.f, 0.f),
+            new Vector3f(0.f, 0.f, 0.f)
+
+    };
 
     public static final float[] vertices = {
             -0.5f,0.5f,-0.5f,
@@ -11,12 +102,12 @@ public final class Cube {
             -0.5f,0.5f,0.5f,
             -0.5f,-0.5f,0.5f,
             0.5f,-0.5f,0.5f,
-            0.5f,0.5f,0.5f,
+            0.5f,0.5f,0.5f, //
 
             0.5f,0.5f,-0.5f,
             0.5f,-0.5f,-0.5f,
             0.5f,-0.5f,0.5f,
-            0.5f,0.5f,0.5f,
+            0.5f,0.5f,0.5f, //
 
             -0.5f,0.5f,-0.5f,
             -0.5f,-0.5f,-0.5f,

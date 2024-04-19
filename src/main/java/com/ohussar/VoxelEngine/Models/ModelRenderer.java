@@ -20,7 +20,7 @@ public class ModelRenderer {
         Matrix4f transformMatrix = Maths.createTransformationMatrix(entity.getPosition(), entity.getRotation(), entity.getScale());
 
         shader.loadTransformationMatrix(transformMatrix);
-
+        //GL11.glDrawArrays(); <- use this without indices ( for chunk mesh )
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, entity.getModel().getTexture().getTextureID());
 
