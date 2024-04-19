@@ -30,7 +30,7 @@ public class MemoryLoader {
         return new RawModel(vaoID, indices.length);
     }
 
-    public int loadTexture(String filename){
+    public static int loadTexture(String filename){
         Texture texture;
         try {
             texture = TextureLoader.getTexture("PNG", new FileInputStream("src/main/resources/" + filename + ".PNG"));
@@ -41,7 +41,7 @@ public class MemoryLoader {
             e.printStackTrace();
         }
         return -1;
-    }
+    };
 
     private int createVAO() {
 
