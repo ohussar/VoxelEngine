@@ -7,9 +7,10 @@ import com.ohussar.VoxelEngine.Textures.ModelTexture;
 
 public class BlockTypes {
 
-    public static final int DIRT = 0;
+    public static final byte DIRT = 1;
 
     public static final ModelTexture[] blockTextures = {
+            new ModelTexture(-1),
             new ModelTexture(MemoryLoader.loadTexture("dirtTex")) // dirt;
     };
 

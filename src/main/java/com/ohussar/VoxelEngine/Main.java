@@ -9,14 +9,18 @@ import com.ohussar.VoxelEngine.Models.RawModel;
 import com.ohussar.VoxelEngine.Models.TexturedModel;
 import com.ohussar.VoxelEngine.Shaders.StaticShader;
 import com.ohussar.VoxelEngine.Textures.ModelTexture;
+import com.ohussar.VoxelEngine.Util.Vec3i;
 import org.lwjgl.LWJGLException;
+import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.*;
 import org.lwjgl.util.vector.Vector3f;
 import com.ohussar.VoxelEngine.Blocks.Block;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Main {
 
@@ -28,22 +32,14 @@ public class Main {
     public static StaticShader StaticShader = null;
 
     static List<Entity> entities = new ArrayList<>();
-
+    static Map<Vec3i, Chunk> chunks = new HashMap<Vec3i, Chunk>();
     public static void main(String[] args) {
         createDiplay();
 
-        MemoryLoader loader = new MemoryLoader();
-        StaticLoader = loader;
-        StaticShader shader = new StaticShader();
-        StaticShader = shader;
-        Renderer renderer = new Renderer(shader);
-
-        RawModel model = loader.loadToVAO(Cube.vertices, Cube.indices, Cube.uv);
-        ModelTexture texture = new ModelTexture(MemoryLoader.loadTexture("dirtTex"));
-        TexturedModel texModel = new TexturedModel(model, texture);
-        Entity entity = new Entity(texModel, new Vector3f(0, 2, 0), new Vector3f(0, 0,0), 1);
-        entities.add(entity);
-        Chunk chunk = new Chunk();
+        StaticLoader = new MemoryLoader();
+        StaticShader = new StaticShader();
+        Renderer renderer = new Renderer(StaticShader);
+        Chunk chunk = new Chunk(new Vector3f(0, 0, 0));
         List<Block> blocks = new ArrayList<>();
         for(int x = 0; x < 8; x++){
             for(int y = 0; y < 8; y++){
@@ -55,14 +51,37 @@ public class Main {
         chunk.setBlockList(blocks);
         chunk.buildMesh();
         Camera camera = new Camera(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0));
-        System.out.println(chunk.getVertices().size() * 3);
+        chunks.put(new Vec3i(chunk.getPosition()), chunk);
+        boolean pressed = false;
         while(!Display.isCloseRequested()){
             renderer.prepare();
             camera.move();
-            shader.start();
-            shader.loadViewMatrix(camera);
-            renderer.renderChunk(chunk, shader, texModel);
-            shader.stop();
+            StaticShader.start();
+            StaticShader.loadViewMatrix(camera);
+            for(Chunk c : chunks.values()){
+                renderer.renderChunk(c, StaticShader);
+            }
+
+            StaticShader.stop();
+            if(Keyboard.isKeyDown(Keyboard.KEY_Q) && !pressed){
+                pressed = true;
+                Vector3f pos = new Vector3f((int)Math.floor(camera.getPosition().x), (int)Math.floor(camera.getPosition().y), (int)Math.floor(camera.getPosition().z));
+
+                int chunkx = (int) Math.floor(pos.x/16);
+                int chunkz = (int) Math.floor(pos.z/16);
+                Vec3i p = new Vec3i(chunkx, 0, chunkz);
+                if(!chunks.containsKey(p)){
+                    Chunk c = new Chunk(p.toVec3f());
+                    chunks.put(p, c);
+                }
+                Chunk chunk1 = chunks.get(p);
+
+                chunk1.addBlockToChunk(new Block(BlockTypes.DIRT, pos));
+                chunk1.buildMesh();
+            }
+            if(!Keyboard.isKeyDown(Keyboard.KEY_Q)){
+                pressed = false;
+            }
             updateDisplay();
         }
         closeDisplay();

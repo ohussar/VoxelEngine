@@ -21,6 +21,10 @@ public class MemoryLoader {
     static List<Integer> vaos = new ArrayList<>();
     static List<Integer> vbos = new ArrayList<>();
     static List<Integer> textures = new ArrayList<>();
+
+
+
+
     public RawModel loadToVAO(float[] vertices, int[] indices, float[] uv) {
         int vaoID = createVAO();
         storeDataInAttributeList(vertices, 0, 3);
@@ -33,8 +37,10 @@ public class MemoryLoader {
     public int updateVAO(int VAO, float[] vertices, float[] uv){
         if(VAO == -1){
             VAO = createVAO();
+        }else{
+            GL30.glDeleteVertexArrays(VAO);
+            VAO = createVAO();
         }
-        GL30.glBindVertexArray(VAO);
         storeDataInAttributeList(vertices, 0, 3);
         storeDataInAttributeList(uv, 1, 2);
         GL30.glBindVertexArray(0);

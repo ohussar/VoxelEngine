@@ -7,6 +7,7 @@ import com.ohussar.VoxelEngine.Models.RawModel;
 import com.ohussar.VoxelEngine.Models.TexturedModel;
 import com.ohussar.VoxelEngine.Shaders.StaticShader;
 import com.ohussar.VoxelEngine.Util.Maths;
+import com.ohussar.VoxelEngine.Util.Util;
 import org.lwjgl.Sys;
 import org.lwjgl.opengl.*;
 import org.lwjgl.util.vector.Matrix4f;
@@ -39,7 +40,7 @@ public class Renderer {
         ModelRenderer.render(entity, shader);
     }
 
-    public void renderChunk(Chunk chunk, StaticShader shader, TexturedModel model){
+    public void renderChunk(Chunk chunk, StaticShader shader){
         GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
 
         GL30.glBindVertexArray(chunk.VAO);
@@ -48,8 +49,8 @@ public class Renderer {
 
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
         GL11.glBindTexture(GL11.GL_TEXTURE_2D, BlockTypes.blockTextures[BlockTypes.DIRT].getTextureID());
-
-        Matrix4f transformMatrix = Maths.createTransformationMatrix(new Vector3f(5, 0, -5), new Vector3f(0, 0, 0), 1);
+        Vector3f p = new Vector3f(chunk.getPosition().x*16, chunk.getPosition().y*16, chunk.getPosition().z*16);
+        Matrix4f transformMatrix = Maths.createTransformationMatrix(p, Util.EmptyVec3(), 1);
         shader.loadTransformationMatrix(transformMatrix);
 
         GL11.glDrawArrays(GL11.GL_TRIANGLES, 0,chunk.getVertices().size() * 3);
