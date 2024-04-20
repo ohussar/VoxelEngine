@@ -70,8 +70,12 @@ public class Chunk {
         addBlockToChunkInternal(block, relx, rely, relz);
     }
 
-    public void removeBlockFromChunk(Block block){
-
+    public void removeBlockFromChunk(int x, int y, int z){
+        Block block = getBlockAtPos(x, y, z);
+        if(block.blockType != -1){
+            this.blocks.remove(block);
+            addBlockToChunkInternal(null, x, y, z);
+        }
     }
 
     public Block getBlockAtPos(int x, int y, int z){

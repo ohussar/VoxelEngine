@@ -3,15 +3,10 @@ package com.ohussar.VoxelEngine;
 import com.ohussar.VoxelEngine.Blocks.BlockTypes;
 import com.ohussar.VoxelEngine.Blocks.Chunk;
 import com.ohussar.VoxelEngine.Entities.Camera;
-import com.ohussar.VoxelEngine.Entities.Cube;
 import com.ohussar.VoxelEngine.Entities.Entity;
-import com.ohussar.VoxelEngine.Models.RawModel;
-import com.ohussar.VoxelEngine.Models.TexturedModel;
 import com.ohussar.VoxelEngine.Shaders.StaticShader;
-import com.ohussar.VoxelEngine.Textures.ModelTexture;
 import com.ohussar.VoxelEngine.Util.Vec3i;
 import org.lwjgl.LWJGLException;
-import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.*;
@@ -24,8 +19,6 @@ import java.util.Map;
 
 public class Main {
 
-    public static final int WIDTH = 1280;
-    public static final int HEIGHT = 720;
     public static final int FRAMERATE = 60;
 
     public static MemoryLoader StaticLoader = null;
@@ -52,7 +45,8 @@ public class Main {
         chunk.buildMesh();
         Camera camera = new Camera(new Vector3f(0, 0, 0), new Vector3f(0, 0, 0));
         chunks.put(new Vec3i(chunk.getPosition()), chunk);
-        boolean pressed = false;
+        boolean pressedq = false;
+        boolean pressedr = false;
         while(!Display.isCloseRequested()){
             renderer.prepare();
             camera.move();
@@ -61,10 +55,27 @@ public class Main {
             for(Chunk c : chunks.values()){
                 renderer.renderChunk(c, StaticShader);
             }
-
             StaticShader.stop();
-            if(Keyboard.isKeyDown(Keyboard.KEY_Q) && !pressed){
-                pressed = true;
+            if(Keyboard.isKeyDown(Keyboard.KEY_R) && !pressedr){
+                pressedr = true;
+                Vector3f pos = new Vector3f((int)Math.floor(camera.getPosition().x), (int)Math.floor(camera.getPosition().y), (int)Math.floor(camera.getPosition().z));
+                int chunkx = (int) Math.floor(pos.x/16);
+                int chunkz = (int) Math.floor(pos.z/16);
+
+                int relx = (int) pos.x - chunkx * 16;
+                int rely = (int) pos.y;
+                int relz = (int) pos.z - chunkz * 16;
+                Vec3i chunkpos = new Vec3i(chunkx, 0, chunkz);
+                if(!chunks.containsKey(chunkpos)){
+                    Chunk ch = new Chunk(chunkpos.toVec3f());
+                    chunks.put(chunkpos, ch);
+                }
+                Chunk cc = chunks.get(chunkpos);
+                cc.removeBlockFromChunk(relx, rely, relz);
+                cc.buildMesh();
+            }
+            if(Keyboard.isKeyDown(Keyboard.KEY_Q) && !pressedq){
+                pressedq = true;
                 Vector3f pos = new Vector3f((int)Math.floor(camera.getPosition().x), (int)Math.floor(camera.getPosition().y), (int)Math.floor(camera.getPosition().z));
 
                 int chunkx = (int) Math.floor(pos.x/16);
@@ -79,8 +90,11 @@ public class Main {
                 chunk1.addBlockToChunk(new Block(BlockTypes.DIRT, pos));
                 chunk1.buildMesh();
             }
+            if(!Keyboard.isKeyDown(Keyboard.KEY_R)){
+                pressedr = false;
+            }
             if(!Keyboard.isKeyDown(Keyboard.KEY_Q)){
-                pressed = false;
+                pressedq = false;
             }
             updateDisplay();
         }

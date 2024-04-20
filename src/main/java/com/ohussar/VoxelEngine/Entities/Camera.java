@@ -33,13 +33,20 @@ public class Camera {
             hor = -speed;
         }
 
+
+
         rotation.x += 0.1f*-Mouse.getDY();
         rotation.y += 0.1f*Mouse.getDX();
 
         float dx = (float) Math.sin(Math.toRadians(rotation.getY())) * -mat;
-        float dy = (float) Math.sin(Math.toRadians(rotation.getX())) * mat;
+        float dy = 0;
         float dz = (float) Math.cos(Math.toRadians(rotation.getY())) * mat;
-
+        if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
+            dy += 0.1f;
+        }
+        if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)){
+            dy-=0.1f;
+        }
         position.translate(dx, dy, dz);
         dx = (float) Math.cos(Math.toRadians(rotation.getY())) * -hor;
         dz = (float) Math.sin(Math.toRadians(rotation.getY())) * -hor;
