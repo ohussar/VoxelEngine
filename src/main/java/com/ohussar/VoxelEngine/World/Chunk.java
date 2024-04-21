@@ -63,18 +63,16 @@ public class Chunk {
         System.out.println("relative " + temp.toString());
 
         Block newblock = new Block(block.blockType, new Vector3f(relx, rely, relz));
-        if(getBlockAtPos(relx, rely, relz).blockType > 0){
-            //int index = this.blocks.indexOf(getBlockAtPos(relx, rely, relz));
-            //this.blocks.set(index, newblock);
-        }else{
-            this.blocks.add(newblock);
+        if(getBlockAtPos(relx, rely, relz) != null && getBlockAtPos(relx, rely, relz).blockType > 0){
+            this.blocks.remove(getBlockAtPos(relx, rely, relz));
         }
+        this.blocks.add(newblock);
         addBlockToChunkInternal(newblock, relx, rely, relz);
     }
 
     public void removeBlockFromChunk(int x, int y, int z){
         Block block = getBlockAtPos(x, y, z);
-        if(block.blockType != -1){
+        if(block != null && block.blockType != -1){
             this.blocks.remove(block);
             addBlockToChunkInternal(null, x, y, z);
         }
@@ -85,7 +83,7 @@ public class Chunk {
             return null;
         }
 
-        return CHUNK_BLOCKS[x * CHUNK_SIZE_X + y + z * (CHUNK_SIZE_X * CHUNK_SIZE_Y)] == null ? new Block((byte) -1, new Vec3i(x, y, z).toVec3f()) : CHUNK_BLOCKS[x * CHUNK_SIZE_X + y + z * (CHUNK_SIZE_X * CHUNK_SIZE_Y)];
+        return CHUNK_BLOCKS[x * CHUNK_SIZE_X + y + z * (CHUNK_SIZE_X * CHUNK_SIZE_Y)];
     }
     private void addBlockToChunkInternal(Block block, int x, int y, int z){
         CHUNK_BLOCKS[x * CHUNK_SIZE_X + y + z * (CHUNK_SIZE_X * CHUNK_SIZE_Y)] = block;
@@ -95,49 +93,12 @@ public class Chunk {
         List<Float> uvlist = new ArrayList<Float>();
         vertices.clear();
 //        blocks.clear();
-//        Vector3f[][] vertexes = {PY_POS, NY_POS, PX_POS, NX_POS, PZ_POS, NZ_POS};
 //        for(int x = 0; x < CHUNK_SIZE_X; x++){
 //            for(int y = 0; y < CHUNK_SIZE_Y; y++){
 //                for(int z = 0; z < CHUNK_SIZE_Z; z++){
 //                    Block s = getBlockAtPos(x, y, z);
 //                    if(s == null || s.blockType == -1) continue;
-//
-//                    Vector3f[] directions = {
-//                            new Vector3f(0, 1, 0),
-//                            new Vector3f(0, -1, 0),
-//                            new Vector3f(1, 0, 0),
-//                            new Vector3f(-1 , 0, 0),
-//                            new Vector3f(0, 0, 1),
-//                            new Vector3f(0, 0, -1)
-//                    };
-//
-//                    Boolean[] isOccluded = {false, false, false, false, false, false};
-//
-//                    for (int k = 0; k < directions.length; k++) {
-//                        Vector3f p = new Vector3f(x + directions[k].x, y + directions[k].y, z + directions[k].z);
-//                        if(p.x >= 0 && p.x < CHUNK_SIZE_X && p.y >= 0 && p.y < CHUNK_SIZE_Y && p.z >= 0 && p.z < CHUNK_SIZE_Z){
-//                            Block b = getBlockAtPos((int)p.x, (int)p.y, (int)p.z);
-//                            if(b != null && b.blockType != -1){
-//                                isOccluded[k] = true;
-//                            }
-//                        }
-//                    }
-//
-//                    for(int k = 0; k < directions.length; k++){
-//                        if(!isOccluded[k]){
-//                            for(int f = 0; f < 6; f++){
-//                                Vector3f start = vertexes[k][f];
-//                                Vector3f pos = new Vector3f(start.x + x, start.y + y, start.z + z);
-//                                positionslist.add(pos.x);
-//                                positionslist.add(pos.y);
-//                                positionslist.add(pos.z);
-//                                uvlist.add(UV[f].x);
-//                                uvlist.add(UV[f].y);
-//                                vertices.add(new Vertex(pos, UV[f]));
-//                            }
-//                        }
-//                    }
-//
+//                    blocks.add(s);
 //                }
 //            }
 //        }
@@ -179,6 +140,7 @@ public class Chunk {
             }
 
         }
+
 
         float[] vert = new float[positionslist.size()];
         float[] uv = new float[uvlist.size()];

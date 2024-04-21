@@ -60,7 +60,6 @@ public class Camera {
                     Block block = Main.world.getBlock(pos.toVec3f());
                     if (block != null) {
                         if (block.blockType != -1) {
-
                             Vec3i ray1 = new Vec3i(new Vector3f((int) Math.round(xx), (int) Math.round(beforeY), (int) Math.round(beforeZ)));
                             Block block1 = Main.world.getBlock(ray1.toVec3f());
                             if(block1 != null && block1.blockType != -1){

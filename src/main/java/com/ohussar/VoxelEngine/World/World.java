@@ -72,8 +72,7 @@ public class World {
         int relz = zz - chunkz * 16;
         Block ret = chunk.getBlockAtPos(relx, rely, relz);
         if(ret!=null){
-            ret.pos.translate(chunkx*16, 0, chunkz*16);
-            return ret;
+            return new Block(ret.blockType, new Vector3f(pos.x, pos.y, pos.z));
         }
         return null;
     }
