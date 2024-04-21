@@ -5,21 +5,25 @@ import com.ohussar.VoxelEngine.World.Blocks.Block;
 import com.ohussar.VoxelEngine.Models.Vertex;
 import com.ohussar.VoxelEngine.Main;
 import com.ohussar.VoxelEngine.Util.Util;
+import com.ohussar.VoxelEngine.World.Blocks.BlockTypes;
 import org.lwjgl.Sys;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static com.ohussar.VoxelEngine.Entities.Cube.*;
+import static com.ohussar.VoxelEngine.Entities.Cube.uv;
 
 public class Chunk {
     public int VAO = -1;
     private List<Block> blocks = new ArrayList<>();
     private List<Vertex> vertices = new ArrayList<>();
 
+    private Map<Byte, ChunkMeshData> blockMesh = new HashMap<>();
+
     private static int CHUNK_SIZE_X = 16;
-    private static int CHUNK_SIZE_Y = 32;
+    private static int CHUNK_SIZE_Y = 256;
     private static int CHUNK_SIZE_Z = 16;
 
     private Block[] CHUNK_BLOCKS = new Block[CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z];
@@ -28,6 +32,11 @@ public class Chunk {
 
     public Chunk(Vector3f position){
         this.position = position;
+
+        for(byte b : BlockTypes.blocks){
+            blockMesh.put(b, new ChunkMeshData());
+        }
+
     }
 
     public void setBlockList(List<Block> blocks){
@@ -41,6 +50,11 @@ public class Chunk {
         }
 
     }
+
+    public Map<Byte, ChunkMeshData> getChunkMeshes(){
+        return blockMesh;
+    }
+
 
     public List<Vertex> getVertices(){
         return vertices;
@@ -92,6 +106,11 @@ public class Chunk {
         List<Float> positionslist = new ArrayList<Float>();
         List<Float> uvlist = new ArrayList<Float>();
         vertices.clear();
+
+        for(byte b : BlockTypes.blocks){
+            blockMesh.get(b).vertices.clear();
+        }
+
 //        blocks.clear();
 //        for(int x = 0; x < CHUNK_SIZE_X; x++){
 //            for(int y = 0; y < CHUNK_SIZE_Y; y++){
@@ -124,37 +143,41 @@ public class Chunk {
                     }
                 }
             }
+
+            ChunkMeshData data = blockMesh.get(initial.blockType);
+
             for(int k = 0; k < directions.length; k++){
                 if(!isOccluded[k]){
+                    Vector2f[] uv = BlockTypes.blockUvs.get(initial.blockType).getUvForSide(k);
                     for(int f = 0; f < 6; f++){
                         Vector3f start = vertexes[k][f];
                         Vector3f pos = new Vector3f(start.x + initial.pos.x, start.y + initial.pos.y, start.z + initial.pos.z);
-                        positionslist.add(pos.x);
-                        positionslist.add(pos.y);
-                        positionslist.add(pos.z);
-                        uvlist.add(UV[f].x);
-                        uvlist.add(UV[f].y);
-                        vertices.add(new Vertex(pos, UV[f]));
+                        data.positionList.add(pos.x);
+                        data.positionList.add(pos.y);
+                        data.positionList.add(pos.z);
+                        data.uvsList.add(uv[f].x);
+                        data.uvsList.add(uv[f].y);
+                        data.vertices.add(new Vertex(pos, UV[f]));
                     }
                 }
             }
 
         }
 
-
-        float[] vert = new float[positionslist.size()];
-        float[] uv = new float[uvlist.size()];
-
-        for(int i = 0; i < positionslist.size(); i++){
-            vert[i] = positionslist.get(i);
+        for(ChunkMeshData data : blockMesh.values()){
+            float[] vert = new float[data.positionList.size()];
+            float[] uv = new float[data.uvsList.size()];
+            for(int i = 0; i < data.positionList.size(); i++){
+                vert[i] = data.positionList.get(i);
+            }
+            for(int k = 0; k < data.uvsList.size(); k++){
+                uv[k] = data.uvsList.get(k);
+            }
+            data.VAO = Main.StaticLoader.updateVAO(data.VAO, vert, uv);
+            data.positionList.clear();;
+            data.uvsList.clear();
         }
-        for(int k = 0; k < uvlist.size(); k++){
-            uv[k] = uvlist.get(k);
-        }
 
-        VAO = Main.StaticLoader.updateVAO(VAO, vert, uv);
-        positionslist.clear();;
-        uvlist.clear();
     }
 
 }

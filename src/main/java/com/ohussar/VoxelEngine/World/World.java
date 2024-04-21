@@ -1,6 +1,7 @@
 package com.ohussar.VoxelEngine.World;
 
 import com.ohussar.VoxelEngine.Entities.Camera;
+import com.ohussar.VoxelEngine.Test.PerlinNoiseGenerator;
 import com.ohussar.VoxelEngine.Util.Vec3i;
 import com.ohussar.VoxelEngine.World.Blocks.Block;
 import com.ohussar.VoxelEngine.World.Blocks.BlockTypes;
@@ -26,8 +27,8 @@ public class World {
         if(!chunkCameraPos.equals(previousCameraPos)){
             previousCameraPos = chunkCameraPos;
             loadedChunks.clear();
-            for(int i = -5; i < 5; i++){
-                for(int j = -5; j < 5; j++){
+            for(int i = -10; i < 10; i++){
+                for(int j = -10; j < 10; j++){
                     Vec3i copy = chunkCameraPos.copy();
                     Vec3i chunkPos = copy.translate(i, 0, j);
                     if(!isChunkGenerated(chunkPos)){
@@ -114,10 +115,13 @@ public class World {
             Chunk generatedChunk = new Chunk(chunkpos.toVec3f());
 
             List<Block> blocks = new ArrayList<>();
-
+            PerlinNoiseGenerator gen = new PerlinNoiseGenerator();
             for(int x = 0; x < 16; x++){
                 for(int z = 0; z < 16; z++){
-                    Block block = new Block(BlockTypes.DIRT, new Vector3f(x, 0, z));
+
+                    int height = (int) gen.generateHeight(x + chunkpos.getX() * 16, z + chunkpos.getZ() * 16);
+                    height += 60;
+                    Block block = new Block(BlockTypes.GRASS, new Vector3f(x, height, z));
                     blocks.add(block);
                 }
             }
