@@ -22,9 +22,9 @@ public class Chunk {
 
     private Map<Byte, ChunkMeshData> blockMesh = new HashMap<>();
 
-    private static int CHUNK_SIZE_X = 16;
-    private static int CHUNK_SIZE_Y = 256;
-    private static int CHUNK_SIZE_Z = 16;
+    private static final int CHUNK_SIZE_X = 16;
+    public static final int CHUNK_SIZE_Y = 256;
+    private static final int CHUNK_SIZE_Z = 16;
 
     private Block[] CHUNK_BLOCKS = new Block[CHUNK_SIZE_X * CHUNK_SIZE_Y * CHUNK_SIZE_Z];
 

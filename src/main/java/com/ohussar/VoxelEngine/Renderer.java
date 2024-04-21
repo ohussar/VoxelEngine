@@ -13,6 +13,7 @@ import org.lwjgl.util.vector.Vector3f;
 
 import java.util.Map;
 
+import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL12.GL_CLAMP_TO_EDGE;
 import static org.lwjgl.opengl.GL12.GL_TEXTURE_MAX_LEVEL;
 
@@ -38,17 +39,16 @@ public class Renderer {
     }
 
     public void render(Entity entity, StaticShader shader) {
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
         ModelRenderer.render(entity, shader);
     }
 
     public void renderChunk(Chunk chunk, StaticShader shader){
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-
-
-
+        //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        
         GL13.glActiveTexture(GL13.GL_TEXTURE0);
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, BlockTypes.atlas.getTextureID());
+        GL11.glBindTexture(GL_TEXTURE_2D, BlockTypes.atlas.getTextureID());
         Vector3f p = new Vector3f(chunk.getPosition().x*16, chunk.getPosition().y*16, chunk.getPosition().z*16);
         Matrix4f transformMatrix = Maths.createTransformationMatrix(p, Util.EmptyVec3(), 1);
         shader.loadTransformationMatrix(transformMatrix);

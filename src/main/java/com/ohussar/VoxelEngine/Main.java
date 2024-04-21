@@ -38,7 +38,7 @@ public class Main {
         BlockTypes.registerBlocks();
         BlockTypes.registerUvGetters();
         Renderer renderer = new Renderer(StaticShader);
-        Camera camera = new Camera(new Vector3f(0, 60, 0), new Vector3f(0, 0, 0));
+        Camera camera = new Camera(new Vector3f(0, 80, 0), new Vector3f(0, 0, 0));
         boolean pressedq = false;
         boolean pressedr = false;
 

@@ -64,16 +64,21 @@ public class World {
         int chunkz = (int) Math.floor((double)zz/(double)16);
         Vec3i chunkpos = new Vec3i(chunkx, 0, chunkz);
         if(!isChunkGenerated(chunkpos)){
-            generateChunk(chunkpos);
+            return null;
         }
         Chunk chunk = chunks.get(chunkpos);
 
         int relx = xx - chunkx * 16;
         int rely = yy;
         int relz = zz - chunkz * 16;
+
+        if(rely >= Chunk.CHUNK_SIZE_Y){
+            return null;
+        }
+
         Block ret = chunk.getBlockAtPos(relx, rely, relz);
         if(ret!=null){
-            return new Block(ret.blockType, new Vector3f(pos.x, pos.y, pos.z));
+            return new Block(ret.blockType, new Vector3f(relx + chunkx * 16, rely, relz + chunkz * 16));
         }
         return null;
     }
