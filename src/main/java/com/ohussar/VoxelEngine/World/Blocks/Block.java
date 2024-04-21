@@ -1,4 +1,4 @@
-package com.ohussar.VoxelEngine.Blocks;
+package com.ohussar.VoxelEngine.World.Blocks;
 
 import org.lwjgl.util.vector.Vector3f;
 

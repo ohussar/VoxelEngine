@@ -1,17 +1,13 @@
 package com.ohussar.VoxelEngine;
-import com.ohussar.VoxelEngine.Blocks.Block;
-import com.ohussar.VoxelEngine.Blocks.BlockTypes;
+import com.ohussar.VoxelEngine.World.Blocks.BlockTypes;
 import com.ohussar.VoxelEngine.Entities.Entity;
 import com.ohussar.VoxelEngine.Models.ModelRenderer;
-import com.ohussar.VoxelEngine.Models.RawModel;
-import com.ohussar.VoxelEngine.Models.TexturedModel;
 import com.ohussar.VoxelEngine.Shaders.StaticShader;
 import com.ohussar.VoxelEngine.Util.Maths;
 import com.ohussar.VoxelEngine.Util.Util;
-import org.lwjgl.Sys;
 import org.lwjgl.opengl.*;
 import org.lwjgl.util.vector.Matrix4f;
-import com.ohussar.VoxelEngine.Blocks.Chunk;
+import com.ohussar.VoxelEngine.World.Chunk;
 import org.lwjgl.util.vector.Vector3f;
 
 public class Renderer {

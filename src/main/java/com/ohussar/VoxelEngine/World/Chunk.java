@@ -1,16 +1,14 @@
-package com.ohussar.VoxelEngine.Blocks;
+package com.ohussar.VoxelEngine.World;
 
-import com.ohussar.VoxelEngine.Entities.Cube;
+import com.ohussar.VoxelEngine.Util.Vec3i;
+import com.ohussar.VoxelEngine.World.Blocks.Block;
+import com.ohussar.VoxelEngine.Models.Vertex;
 import com.ohussar.VoxelEngine.Main;
-import com.ohussar.VoxelEngine.MemoryLoader;
 import com.ohussar.VoxelEngine.Util.Util;
 import org.lwjgl.Sys;
-import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
-import org.ninjacave.jarsplice.gui.ShellScriptPanel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static com.ohussar.VoxelEngine.Entities.Cube.*;
@@ -60,14 +58,18 @@ public class Chunk {
         int relx = x - (int)position.x*16;
         int rely = y - (int)position.y*16;
         int relz = z - (int)position.z*16;
-        block.pos.set(relx, rely, relz);
+
+        Vec3i temp = new Vec3i(relx, rely, relz);
+        System.out.println("relative " + temp.toString());
+
+        Block newblock = new Block(block.blockType, new Vector3f(relx, rely, relz));
         if(getBlockAtPos(relx, rely, relz).blockType > 0){
-            int index = this.blocks.indexOf(getBlockAtPos(relx, rely, relz));
-            this.blocks.set(index, block);
+            //int index = this.blocks.indexOf(getBlockAtPos(relx, rely, relz));
+            //this.blocks.set(index, newblock);
         }else{
-            this.blocks.add(block);
+            this.blocks.add(newblock);
         }
-        addBlockToChunkInternal(block, relx, rely, relz);
+        addBlockToChunkInternal(newblock, relx, rely, relz);
     }
 
     public void removeBlockFromChunk(int x, int y, int z){
@@ -79,7 +81,11 @@ public class Chunk {
     }
 
     public Block getBlockAtPos(int x, int y, int z){
-        return CHUNK_BLOCKS[x * CHUNK_SIZE_X + y + z * (CHUNK_SIZE_X * CHUNK_SIZE_Y)] == null ? new Block((byte) -1, Util.EmptyVec3()) : CHUNK_BLOCKS[x * CHUNK_SIZE_X + y + z * (CHUNK_SIZE_X * CHUNK_SIZE_Y)];
+        if(x * CHUNK_SIZE_X + y + z * (CHUNK_SIZE_X * CHUNK_SIZE_Y) >= CHUNK_BLOCKS.length){
+            return null;
+        }
+
+        return CHUNK_BLOCKS[x * CHUNK_SIZE_X + y + z * (CHUNK_SIZE_X * CHUNK_SIZE_Y)] == null ? new Block((byte) -1, new Vec3i(x, y, z).toVec3f()) : CHUNK_BLOCKS[x * CHUNK_SIZE_X + y + z * (CHUNK_SIZE_X * CHUNK_SIZE_Y)];
     }
     private void addBlockToChunkInternal(Block block, int x, int y, int z){
         CHUNK_BLOCKS[x * CHUNK_SIZE_X + y + z * (CHUNK_SIZE_X * CHUNK_SIZE_Y)] = block;
@@ -88,6 +94,55 @@ public class Chunk {
         List<Float> positionslist = new ArrayList<Float>();
         List<Float> uvlist = new ArrayList<Float>();
         vertices.clear();
+//        blocks.clear();
+//        Vector3f[][] vertexes = {PY_POS, NY_POS, PX_POS, NX_POS, PZ_POS, NZ_POS};
+//        for(int x = 0; x < CHUNK_SIZE_X; x++){
+//            for(int y = 0; y < CHUNK_SIZE_Y; y++){
+//                for(int z = 0; z < CHUNK_SIZE_Z; z++){
+//                    Block s = getBlockAtPos(x, y, z);
+//                    if(s == null || s.blockType == -1) continue;
+//
+//                    Vector3f[] directions = {
+//                            new Vector3f(0, 1, 0),
+//                            new Vector3f(0, -1, 0),
+//                            new Vector3f(1, 0, 0),
+//                            new Vector3f(-1 , 0, 0),
+//                            new Vector3f(0, 0, 1),
+//                            new Vector3f(0, 0, -1)
+//                    };
+//
+//                    Boolean[] isOccluded = {false, false, false, false, false, false};
+//
+//                    for (int k = 0; k < directions.length; k++) {
+//                        Vector3f p = new Vector3f(x + directions[k].x, y + directions[k].y, z + directions[k].z);
+//                        if(p.x >= 0 && p.x < CHUNK_SIZE_X && p.y >= 0 && p.y < CHUNK_SIZE_Y && p.z >= 0 && p.z < CHUNK_SIZE_Z){
+//                            Block b = getBlockAtPos((int)p.x, (int)p.y, (int)p.z);
+//                            if(b != null && b.blockType != -1){
+//                                isOccluded[k] = true;
+//                            }
+//                        }
+//                    }
+//
+//                    for(int k = 0; k < directions.length; k++){
+//                        if(!isOccluded[k]){
+//                            for(int f = 0; f < 6; f++){
+//                                Vector3f start = vertexes[k][f];
+//                                Vector3f pos = new Vector3f(start.x + x, start.y + y, start.z + z);
+//                                positionslist.add(pos.x);
+//                                positionslist.add(pos.y);
+//                                positionslist.add(pos.z);
+//                                uvlist.add(UV[f].x);
+//                                uvlist.add(UV[f].y);
+//                                vertices.add(new Vertex(pos, UV[f]));
+//                            }
+//                        }
+//                    }
+//
+//                }
+//            }
+//        }
+
+
         for(int i = 0; i < this.blocks.size(); i++){
             Vector3f[] directions = {
                     new Vector3f(0, 1, 0),

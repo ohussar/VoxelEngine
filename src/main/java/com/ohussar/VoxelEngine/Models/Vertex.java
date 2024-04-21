@@ -1,4 +1,4 @@
-package com.ohussar.VoxelEngine.Blocks;
+package com.ohussar.VoxelEngine.Models;
 
 import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;

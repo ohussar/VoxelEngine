@@ -47,6 +47,17 @@ public class Vec3i {
         return new Vector3f(this.x, this.y, this.z);
     }
 
+    public Vec3i copy(){
+        return new Vec3i(this.x, this.y, this.z);
+    }
+
+    public Vec3i translate(int x, int y, int z){
+        this.x += x;
+        this.y += y;
+        this.z += z;
+        return this;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if(obj == null) return false;

@@ -1,4 +1,4 @@
-package com.ohussar.VoxelEngine.Blocks;
+package com.ohussar.VoxelEngine.World.Blocks;
 
 import com.ohussar.VoxelEngine.Entities.Cube;
 import com.ohussar.VoxelEngine.MemoryLoader;
