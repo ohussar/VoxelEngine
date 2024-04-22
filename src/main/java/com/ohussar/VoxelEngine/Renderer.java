@@ -1,4 +1,5 @@
 package com.ohussar.VoxelEngine;
+import com.ohussar.VoxelEngine.Entities.Player;
 import com.ohussar.VoxelEngine.World.Blocks.BlockTypes;
 import com.ohussar.VoxelEngine.Entities.Entity;
 import com.ohussar.VoxelEngine.Models.ModelRenderer;
@@ -41,6 +42,21 @@ public class Renderer {
     public void render(Entity entity, StaticShader shader) {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
         ModelRenderer.render(entity, shader);
+    }
+
+    public void renderPlayer(Player player, StaticShader shader){
+        GL30.glBindVertexArray(player.getVAO());
+        GL20.glEnableVertexAttribArray(0); //position
+        GL20.glEnableVertexAttribArray(1); //uv
+        Matrix4f transformMatrix = Maths.createTransformationMatrix(player.position, new Vector3f(0, 45, 0), 1);
+        shader.loadTransformationMatrix(transformMatrix);
+        //GL11.glDrawArrays(); <- use this without indices ( for chunk mesh )
+        GL13.glActiveTexture(GL13.GL_TEXTURE0);
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, BlockTypes.atlas.getTextureID());
+        GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, player.getVertexCount());
+        GL20.glDisableVertexAttribArray(0);
+        GL20.glDisableVertexAttribArray(1);
+        GL30.glBindVertexArray(0);
     }
 
     public void renderChunk(Chunk chunk, StaticShader shader){

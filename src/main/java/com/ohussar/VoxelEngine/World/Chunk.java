@@ -93,11 +93,15 @@ public class Chunk {
     }
 
     public Block getBlockAtPos(int x, int y, int z){
-        if(x * CHUNK_SIZE_X + y + z * (CHUNK_SIZE_X * CHUNK_SIZE_Y) >= CHUNK_BLOCKS.length){
+        int coord = x * CHUNK_SIZE_X + y + z * (CHUNK_SIZE_X * CHUNK_SIZE_Y);
+        if(coord >= CHUNK_BLOCKS.length){
+            return null;
+        }
+        if(y >= CHUNK_SIZE_Y){
             return null;
         }
 
-        return CHUNK_BLOCKS[x * CHUNK_SIZE_X + y + z * (CHUNK_SIZE_X * CHUNK_SIZE_Y)];
+        return CHUNK_BLOCKS[coord];
     }
     private void addBlockToChunkInternal(Block block, int x, int y, int z){
         CHUNK_BLOCKS[x * CHUNK_SIZE_X + y + z * (CHUNK_SIZE_X * CHUNK_SIZE_Y)] = block;

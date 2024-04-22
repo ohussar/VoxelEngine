@@ -27,13 +27,12 @@ public class Camera {
 
 
     public void tick() {
-        move();
+        //move();
 
        // this.momentum.translate(0, -0.01f, 0);
         Vector3f future = new Vector3f(this.position.x, this.position.y + this.momentum.y - 1, this.position.x);
         Block toMeet = Main.world.getBlock(future);
         if(toMeet != null){
-            System.out.println("mmmm");
             this.momentum.y *= -0.7f;
         }
 
@@ -54,6 +53,8 @@ public class Camera {
                 Main.world.removeBlock(new Vec3i(block.pos));
             }
         }
+        rotation.x += 0.1f*-Mouse.getDY();
+        rotation.y += 0.1f*Mouse.getDX();
         this.position.translate(momentum.x, momentum.y, momentum.z);
     }
 
@@ -160,37 +161,35 @@ public class Camera {
         float mat = 0f;
         float hor = 0;
         if(Keyboard.isKeyDown(Keyboard.KEY_W)) {
-            mat = -1;
+            mat = -speed;
         } else if(Keyboard.isKeyDown(Keyboard.KEY_S)){
-            mat = 1;
+            mat = speed;
         }
 
         if(Keyboard.isKeyDown(Keyboard.KEY_A)) {
-            hor = 1;
+            hor = speed;
         }else if(Keyboard.isKeyDown(Keyboard.KEY_D)){
-            hor = -1;
+            hor = -speed;
         }
 
-        rotation.x += 0.1f*-Mouse.getDY();
-        rotation.y += 0.1f*Mouse.getDX();
 
         float dx = (float) Math.sin(Math.toRadians(rotation.getY())) * -mat;
         float dy = 0;
         float dz = (float) Math.cos(Math.toRadians(rotation.getY())) * mat;
-        if(Keyboard.isKeyDown(Keyboard.KEY_SPACE) && !space){
-            this.position.y += 0.1f;
-            space = true;
+        if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
+            dy += 0.1f;
         }
         if(Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)){
-            this.position.y -= 0.1f;
+            dy -= 0.1f;
         }
         if(!Keyboard.isKeyDown(Keyboard.KEY_SPACE)){
             space = false;
         }
 
         position.translate(dx, dy, dz);
-        dx = (float) Math.cos(Math.toRadians(rotation.getY())) * mat;
-        dz = (float) Math.sin(Math.toRadians(rotation.getY())) * hor;
+        dx = (float) Math.cos(Math.toRadians(rotation.getY())) * -hor;
+        dz = (float) Math.sin(Math.toRadians(rotation.getY())) * -hor;
+        position.translate(dx, 0, dz);
     }
 
 

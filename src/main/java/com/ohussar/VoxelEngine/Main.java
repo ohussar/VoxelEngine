@@ -1,5 +1,6 @@
 package com.ohussar.VoxelEngine;
 
+import com.ohussar.VoxelEngine.Entities.Player;
 import com.ohussar.VoxelEngine.World.Blocks.BlockTypes;
 import com.ohussar.VoxelEngine.World.Chunk;
 import com.ohussar.VoxelEngine.Entities.Camera;
@@ -41,7 +42,7 @@ public class Main {
         Camera camera = new Camera(new Vector3f(0, 80, 0), new Vector3f(0, 0, 0));
         boolean pressedq = false;
         boolean pressedr = false;
-
+        Player player = new Player(new Vector3f(0, 80, 0));
         world = new World();
 
         while(!Display.isCloseRequested()){
@@ -50,10 +51,11 @@ public class Main {
             StaticShader.start();
             StaticShader.loadViewMatrix(camera);
             world.tick(camera);
-
+            player.tick(world, camera);
             for(Chunk chunk : world.getLoadedChunks()){
                 renderer.renderChunk(chunk, StaticShader);
             }
+            //renderer.renderPlayer(player, StaticShader);
 
             StaticShader.stop();
 //            if(Keyboard.isKeyDown(Keyboard.KEY_R) && !pressedr){
