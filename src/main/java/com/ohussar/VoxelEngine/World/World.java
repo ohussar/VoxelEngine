@@ -5,6 +5,7 @@ import com.ohussar.VoxelEngine.Test.PerlinNoiseGenerator;
 import com.ohussar.VoxelEngine.Util.Vec3i;
 import com.ohussar.VoxelEngine.World.Blocks.Block;
 import com.ohussar.VoxelEngine.World.Blocks.BlockTypes;
+import com.ohussar.VoxelEngine.World.Blocks.Blocks;
 import org.lwjgl.util.vector.Vector3f;
 
 import java.util.ArrayList;
@@ -126,7 +127,7 @@ public class World {
 
                     int height = (int) gen.generateHeight(x + chunkpos.getX() * 16, z + chunkpos.getZ() * 16);
                     height += 60;
-                    Block block = new Block(BlockTypes.GRASS, new Vector3f(x, height, z));
+                    Block block = new Block(Blocks.GRASS, new Vector3f(x, height, z));
                     blocks.add(block);
                 }
             }

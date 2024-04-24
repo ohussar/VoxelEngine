@@ -46,4 +46,13 @@ public class TexturedBlockModel {
         }
     }
 
+    public static class StoneUVS implements uvGetter {
+        public static Vector2f[] ALL = uv(55f, 33f, 70f, 48f);
+        @Override
+        public Vector2f[] getUvForSide(int side) {
+            return ALL;
+        }
+    }
+
+
 }

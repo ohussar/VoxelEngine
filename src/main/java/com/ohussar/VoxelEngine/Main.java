@@ -28,7 +28,7 @@ public class Main {
 
     static List<Entity> entities = new ArrayList<>();
     static Map<Vec3i, Chunk> chunks = new HashMap<Vec3i, Chunk>();
-
+    public static Camera camera = new Camera(new Vector3f(0, 80, 0), new Vector3f(0, 0, 0));;
     public static World world;
 
     public static void main(String[] args) {
@@ -36,12 +36,7 @@ public class Main {
 
         StaticLoader = new MemoryLoader();
         StaticShader = new StaticShader();
-        BlockTypes.registerBlocks();
-        BlockTypes.registerUvGetters();
         Renderer renderer = new Renderer(StaticShader);
-        Camera camera = new Camera(new Vector3f(0, 80, 0), new Vector3f(0, 0, 0));
-        boolean pressedq = false;
-        boolean pressedr = false;
         Player player = new Player(new Vector3f(0, 80, 0));
         world = new World();
 
@@ -49,48 +44,23 @@ public class Main {
             renderer.prepare();
             camera.tick();
             StaticShader.start();
+            StaticShader.connectToTextures();
             StaticShader.loadViewMatrix(camera);
             world.tick(camera);
             player.tick(world, camera);
             for(Chunk chunk : world.getLoadedChunks()){
-                renderer.renderChunk(chunk, StaticShader);
+                renderer.renderChunk(chunk, StaticShader, null);
             }
             //renderer.renderPlayer(player, StaticShader);
 
             StaticShader.stop();
-//            if(Keyboard.isKeyDown(Keyboard.KEY_R) && !pressedr){
-//                pressedr = true;
-//                Vector3f pos = new Vector3f((int)Math.floor(camera.getPosition().x), (int)Math.floor(camera.getPosition().y), (int)Math.floor(camera.getPosition().z));
-//                int chunkx = (int) Math.floor(pos.x/16);
-//                int chunkz = (int) Math.floor(pos.z/16);
-//
-//                int relx = (int) pos.x - chunkx * 16;
-//                int rely = (int) pos.y;
-//                int relz = (int) pos.z - chunkz * 16;
-//                Vec3i chunkpos = new Vec3i(chunkx, 0, chunkz);
-//                if(!chunks.containsKey(chunkpos)){
-//                    Chunk ch = new Chunk(chunkpos.toVec3f());
-//                    chunks.put(chunkpos, ch);
-//                }
-//                Chunk cc = chunks.get(chunkpos);
-//                cc.removeBlockFromChunk(relx, rely, relz);
-//                cc.buildMesh();
-//            }
-            if(Keyboard.isKeyDown(Keyboard.KEY_Q) && !pressedq){
-                pressedq = true;
-                Vector3f pos = new Vector3f((int)Math.floor(camera.getPosition().x), (int)Math.floor(camera.getPosition().y), (int)Math.floor(camera.getPosition().z));
-                world.placeBlock(new Block(BlockTypes.DIRT, pos), new Vec3i(pos));
-            }
-            if(!Keyboard.isKeyDown(Keyboard.KEY_R)){
-                pressedr = false;
-            }
-            if(!Keyboard.isKeyDown(Keyboard.KEY_Q)){
-                pressedq = false;
-            }
+
             updateDisplay();
         }
         closeDisplay();
     }
+
+
 
     public static void createDiplay(){
         ContextAttribs attributes = new ContextAttribs(3, 2)

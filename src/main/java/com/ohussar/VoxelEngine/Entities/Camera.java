@@ -1,9 +1,11 @@
 package com.ohussar.VoxelEngine.Entities;
 
 import com.ohussar.VoxelEngine.Main;
+import com.ohussar.VoxelEngine.MemoryLoader;
 import com.ohussar.VoxelEngine.Util.Vec3i;
 import com.ohussar.VoxelEngine.World.Blocks.Block;
 import com.ohussar.VoxelEngine.World.Blocks.BlockTypes;
+import com.ohussar.VoxelEngine.World.Blocks.Blocks;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.util.vector.Vector3f;
@@ -19,17 +21,17 @@ public class Camera {
     private boolean space = false;
     private boolean mouse0 = false;
     private boolean mouse1 = false;
+
+    public int VAO = -1;
+
     public Camera(Vector3f position, Vector3f rotation) {
         this.position = position;
         this.rotation = rotation;
         this.momentum = new Vector3f(0, 0, 0);
+        this.VAO = Main.StaticLoader.updateVAO(VAO, new float[]{}, new float[]{});
     }
 
-
     public void tick() {
-        //move();
-
-       // this.momentum.translate(0, -0.01f, 0);
         Vector3f future = new Vector3f(this.position.x, this.position.y + this.momentum.y - 1, this.position.x);
         Block toMeet = Main.world.getBlock(future);
         if(toMeet != null){
@@ -88,26 +90,26 @@ public class Camera {
                 previousPos = pos;
                 Block block = Main.world.getBlock(pos.toVec3f());
                 if (block != null) {
-                    if (block.blockType != -1) {
+                    if (block.blockType != null) {
                         Vec3i ray1 = new Vec3i(new Vector3f((int) Math.round(xx), (int) Math.round(beforeY), (int) Math.round(beforeZ)));
                         Block block1 = Main.world.getBlock(ray1.toVec3f());
-                        if(block1 != null && block1.blockType != -1){
+                        if(block1 != null && block1.blockType != null){
                             Vec3i newPos = ray1.translate(-(int)Math.signum(dx), 0,0);
-                            Main.world.placeBlock(new Block(BlockTypes.DIRT, newPos.toVec3f()), newPos);
+                            Main.world.placeBlock(new Block(Blocks.STONE, newPos.toVec3f()), newPos);
                             break;
                         }
                         Vec3i ray2 = new Vec3i(new Vector3f((int) Math.round(beforeX), (int) Math.round(yy), (int) Math.round(beforeZ)));
                         Block block2 = Main.world.getBlock(ray2.toVec3f());
-                        if(block2 != null && block2.blockType != -1){
+                        if(block2 != null && block2.blockType != null){
                             Vec3i newPos = ray2.translate(0, -(int)Math.signum(dy),0);
-                            Main.world.placeBlock(new Block(BlockTypes.DIRT, newPos.toVec3f()), newPos);
+                            Main.world.placeBlock(new Block(Blocks.STONE, newPos.toVec3f()), newPos);
                             break;
                         }
                         Vec3i ray3 = new Vec3i(new Vector3f((int) Math.round(beforeX), (int) Math.round(beforeY), (int) Math.round(zz)));
                         Block block3 = Main.world.getBlock(ray3.toVec3f());
-                        if(block3 != null && block3.blockType != -1){
+                        if(block3 != null && block3.blockType != null){
                             Vec3i newPos = ray3.translate(0, 0,-(int)Math.signum(dz));
-                            Main.world.placeBlock(new Block(BlockTypes.DIRT, newPos.toVec3f()), newPos);
+                            Main.world.placeBlock(new Block(Blocks.STONE, newPos.toVec3f()), newPos);
                             break;
                         }
                         break;
@@ -147,7 +149,7 @@ public class Camera {
                 previousPos = pos;
                 Block block = Main.world.getBlock(pos.toVec3f());
                 if (block != null) {
-                    if (block.blockType != -1) {
+                    if (block.blockType != null) {
                         found = block;
                         break;
                     }

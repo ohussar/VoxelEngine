@@ -11,6 +11,8 @@ public class StaticShader extends ShaderProgram{
     int location_transformationMatrix;
     int location_projectionMatrix;
     int location_viewMatrix;
+    int location_toShadowMapSpace;
+    int location_shadowMap;
     public StaticShader() {
         super(vertexFile, fragmentFile);
     }
@@ -20,12 +22,23 @@ public class StaticShader extends ShaderProgram{
         location_transformationMatrix = super.getUniformLocation("transformationMatrix");
         location_projectionMatrix = super.getUniformLocation("projectionMatrix");
         location_viewMatrix = super.getUniformLocation("viewMatrix");
+        location_toShadowMapSpace = super.getUniformLocation("toShadowMapSpace");
+        location_shadowMap = super.getUniformLocation("shadowMap");
     }
+
+    public void connectToTextures(){
+        super.loadInt(location_shadowMap, 5);
+    }
+
 
     @Override
     protected void bindAttributes() { // bind attributes from model to the shader: like vertex positions to in vec3 pos;
         super.bindAttribute("position", 0);
         super.bindAttribute("textureCoords", 1);
+    }
+
+    public void loadToShadowMapSpaceMatrix(Matrix4f matrix){
+        super.loadMatrix(location_toShadowMapSpace, matrix);
     }
 
     public void loadTransformationMatrix(Matrix4f matrix){

@@ -33,9 +33,7 @@ public class Chunk {
     public Chunk(Vector3f position){
         this.position = position;
 
-        for(byte b : BlockTypes.blocks){
-            blockMesh.put(b, new ChunkMeshData());
-        }
+        blockMesh.put((byte)0, new ChunkMeshData());
 
     }
 
@@ -77,7 +75,7 @@ public class Chunk {
         System.out.println("relative " + temp.toString());
 
         Block newblock = new Block(block.blockType, new Vector3f(relx, rely, relz));
-        if(getBlockAtPos(relx, rely, relz) != null && getBlockAtPos(relx, rely, relz).blockType > 0){
+        if(getBlockAtPos(relx, rely, relz) != null && getBlockAtPos(relx, rely, relz).blockType != null){
             this.blocks.remove(getBlockAtPos(relx, rely, relz));
         }
         this.blocks.add(newblock);
@@ -86,14 +84,14 @@ public class Chunk {
 
     public void removeBlockFromChunk(int x, int y, int z){
         Block block = getBlockAtPos(x, y, z);
-        if(block != null && block.blockType != -1){
+        if(block != null && block.blockType != null){
             this.blocks.remove(block);
             addBlockToChunkInternal(null, x, y, z);
         }
     }
 
     public Block getBlockAtPos(int x, int y, int z){
-        int coord = x * CHUNK_SIZE_X + y + z * (CHUNK_SIZE_X * CHUNK_SIZE_Y);
+        int coord = y * CHUNK_SIZE_X + x + z * (CHUNK_SIZE_X * CHUNK_SIZE_Y);
         if(coord >= CHUNK_BLOCKS.length){
             return null;
         }
@@ -104,16 +102,15 @@ public class Chunk {
         return CHUNK_BLOCKS[coord];
     }
     private void addBlockToChunkInternal(Block block, int x, int y, int z){
-        CHUNK_BLOCKS[x * CHUNK_SIZE_X + y + z * (CHUNK_SIZE_X * CHUNK_SIZE_Y)] = block;
+        CHUNK_BLOCKS[y * CHUNK_SIZE_X + x + z * (CHUNK_SIZE_X * CHUNK_SIZE_Y)] = block;
     }
     public void buildMesh(){
         List<Float> positionslist = new ArrayList<Float>();
         List<Float> uvlist = new ArrayList<Float>();
         vertices.clear();
 
-        for(byte b : BlockTypes.blocks){
-            blockMesh.get(b).vertices.clear();
-        }
+        blockMesh.get((byte) 0).vertices.clear();
+
 
 //        blocks.clear();
 //        for(int x = 0; x < CHUNK_SIZE_X; x++){
@@ -148,11 +145,11 @@ public class Chunk {
                 }
             }
 
-            ChunkMeshData data = blockMesh.get(initial.blockType);
+            ChunkMeshData data = blockMesh.get((byte) 0);
 
             for(int k = 0; k < directions.length; k++){
                 if(!isOccluded[k]){
-                    Vector2f[] uv = BlockTypes.blockUvs.get(initial.blockType).getUvForSide(k);
+                    Vector2f[] uv = initial.blockType.getUvGetter().getUvForSide(k);
                     for(int f = 0; f < 6; f++){
                         Vector3f start = vertexes[k][f];
                         Vector3f pos = new Vector3f(start.x + initial.pos.x, start.y + initial.pos.y, start.z + initial.pos.z);

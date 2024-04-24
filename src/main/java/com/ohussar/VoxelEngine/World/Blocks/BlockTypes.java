@@ -15,27 +15,17 @@ public class BlockTypes {
 
     public static final byte DIRT = 1;
     public static final byte GRASS = 2;
-
-    public static final List<Byte> blocks = new ArrayList<>();
+    private static byte pointer = 0;
     public static ModelTexture atlas = new ModelTexture(MemoryLoader.loadTexture("pack"));
-    public static final ModelTexture[] blockTextures = {
-            new ModelTexture(-1),
-            atlas,
-            atlas,
-    };
+    public static List<BlockType> blocks = new ArrayList<>();
 
-    public static void registerBlocks(){
-        blocks.add(DIRT);
-        blocks.add(GRASS);
+
+    public static BlockType createBlockType(String name, TexturedBlockModel.uvGetter getter){
+         BlockType type = new BlockType(pointer, name, getter);
+         pointer += 1;
+         blocks.add(type);
+        return type;
     }
-
-
-    public static void registerUvGetters(){
-        blockUvs.put(DIRT, new TexturedBlockModel.DirtUVS());
-        blockUvs.put(GRASS, new TexturedBlockModel.GrassUVS());
-    }
-
-    public static final Map<Byte, TexturedBlockModel.uvGetter> blockUvs = new HashMap<>();
 
 
 }

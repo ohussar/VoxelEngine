@@ -10,8 +10,11 @@ import com.ohussar.VoxelEngine.World.ChunkMeshData;
 import org.lwjgl.opengl.*;
 import org.lwjgl.util.vector.Matrix4f;
 import com.ohussar.VoxelEngine.World.Chunk;
+import org.lwjgl.util.vector.Vector2f;
 import org.lwjgl.util.vector.Vector3f;
 
+import java.nio.ByteBuffer;
+import java.util.List;
 import java.util.Map;
 
 import static org.lwjgl.opengl.GL11.*;
@@ -21,11 +24,9 @@ import static org.lwjgl.opengl.GL12.GL_TEXTURE_MAX_LEVEL;
 public class Renderer {
 
     Matrix4f projectionMatrix;
-    private static final float FOV = 70f;
-    private static final float NEAR_PLANE = 0.1f;
-    private static final float FAR_PLANE = 10000f;
-
-
+    public static final float FOV = 70f;
+    public static final float NEAR_PLANE = 0.1f;
+    public static final float FAR_PLANE = 10000f;
     public Renderer(StaticShader shader){
         createProjectionMatrix();
         shader.start();
@@ -33,10 +34,13 @@ public class Renderer {
         shader.stop();
     }
 
+
+
     public void prepare() {
         GL11.glEnable(GL11.GL_DEPTH_TEST);
         GL11.glClearColor(0.4f, 0.7f, 1.0f, 1f);
         GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+        GL13.glActiveTexture(GL13.GL_TEXTURE5);
     }
 
     public void render(Entity entity, StaticShader shader) {
@@ -45,6 +49,12 @@ public class Renderer {
     }
 
     public void renderPlayer(Player player, StaticShader shader){
+
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
         GL30.glBindVertexArray(player.getVAO());
         GL20.glEnableVertexAttribArray(0); //position
         GL20.glEnableVertexAttribArray(1); //uv
@@ -59,7 +69,8 @@ public class Renderer {
         GL30.glBindVertexArray(0);
     }
 
-    public void renderChunk(Chunk chunk, StaticShader shader){
+    public void renderChunk(Chunk chunk, StaticShader shader, Matrix4f toShadowMapSpace){
+        //shader.loadToShadowMapSpaceMatrix(toShadowMapSpace);
         //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
         

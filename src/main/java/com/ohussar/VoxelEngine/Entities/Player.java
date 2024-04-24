@@ -23,6 +23,10 @@ public class Player {
             new Vector3f(0.6f, 0, 0.3f),//
             new Vector3f(0.3f, 0, 0.6f),
             new Vector3f(0.3f, 0, 0.3f),//
+            new Vector3f(0.6f, 1.3f, 0.6f),
+            new Vector3f(0.6f, 1.3f, 0.3f),//
+            new Vector3f(0.3f, 1.3f, 0.6f),
+            new Vector3f(0.3f, 1.3f, 0.3f),//
     };
     private boolean isGrounded = false;
 
